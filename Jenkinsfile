@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         GRID_URL = "http://localhost:4444/wd/hub"
+        PATH = "/usr/local/bin:$PATH"  // Ensure the path to docker-compose is added
     }
 
     stages {
@@ -27,9 +28,7 @@ pipeline {
             steps {
                 echo 'Starting Selenium Grid with Docker Compose...'
                 dir('docker') {  // Ensure that 'docker' directory is where docker-compose.yml is located
-                    withEnv(["PATH+DOCKER=/usr/local/bin"]) {
-                        sh "docker-compose up -d"
-                    }
+                    sh "docker-compose up -d"
                 }
             }
         }
