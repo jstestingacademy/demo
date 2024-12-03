@@ -3,7 +3,6 @@ pipeline {
 
     environment {
         GRID_URL = "http://localhost:4444/wd/hub"
-         PATH = "/usr/local/bin:$PATH" 
     }
 
     stages {
@@ -20,7 +19,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 echo 'Cloning the repository...'
-                git branch: 'main', credentialsId: 'jstestingacademy', url: 'https://github.com/jstestingacademy/demo.git'
+                git branch: 'main', credentialsId: 'git-credentials-id', url: 'https://github.com/jstestingacademy/demo.git'
             }
         }
 
