@@ -26,7 +26,9 @@ pipeline {
         stage('Start Selenium Grid') {
             steps {
                 echo 'Starting Selenium Grid with Docker Compose...'
-                sh 'docker-compose up -d'
+                withEnv(["PATH+DOCKER=/usr/local/bin"]) {
+                    sh "docker-compose up -d"
+                }
             }
         }
 
