@@ -2,45 +2,43 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_COMPOSE_FILE = "docker-compose.yml"
+        GRID_URL = "http://localhost:4444/wd/hub"
     }
 
     stages {
-        stage('Checkout Code') {
+        stage('Clone Repository') {
             steps {
-                 git url: 'https://github.com/jstestingacademy/demo.git', credentialsId: 'jstestingacademy'
-            }
-            }
-        }
-
-        stage('Build with Maven') {
-            steps {
-                sh 'mvn clean install'
+                echo 'Cloning the repository...'
+                git 'https://github.com/jstestingacademy/demo.git'
             }
         }
 
-        stage('Run Tests with Docker') {
+        stage('Start Selenium Grid') {
             steps {
-                sh "docker-compose up --build --abort-on-container-exit"
+                echo 'Starting Selenium Grid with Docker Compose...'
+                sh 'docker-compose up -d'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                echo 'Running Selenium tests with Maven...'
+                sh 'mvn clean test -Dselenium.grid.url=${GRID_URL}'
             }
         }
 
         stage('Generate Reports') {
             steps {
-                publishHTML(target: [
-                    allowMissing: false,
-                    alwaysLinkToLastBuild: true,
-                    keepAll: true,
-                    reportDir: 'target/cucumber-reports',
-                    reportFiles: 'report.html',
-                    reportName: 'Cucumber Test Report'
-                ])
+                echo 'Generating test reports...'
+                sh 'mvn surefire-report:report-only'
             }
         }
     }
 
     post {
         always {
-            sh "docker-compose down"
+            echo 'Cleaning up Docker containers...'
+            sh 'docker-compose down'
         }
     }
+}
