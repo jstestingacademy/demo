@@ -26,8 +26,10 @@ pipeline {
         stage('Start Selenium Grid') {
             steps {
                 echo 'Starting Selenium Grid with Docker Compose...'
-                withEnv(["PATH+DOCKER=/usr/local/bin"]) {
-                    sh "docker-compose up -d"
+                dir('docker') {  // Ensure that 'docker' directory is where docker-compose.yml is located
+                    withEnv(["PATH+DOCKER=/usr/local/bin"]) {
+                        sh "docker-compose up -d"
+                    }
                 }
             }
         }
@@ -50,7 +52,9 @@ pipeline {
     post {
         always {
             echo 'Cleaning up Docker containers...'
-            sh 'docker-compose down || true'
+            dir('docker') {  // Ensure cleanup is done in the correct directory
+                sh 'docker-compose down || true'
+            }
         }
     }
 }
