@@ -1,19 +1,18 @@
 pipeline {
-    agent any
+    agent any  // Use any agent (suitable for Windows)
 
     environment {
         GRID_URL = "http://localhost:4444/wd/hub"
-        PATH = "/usr/local/bin:$PATH"  // Ensure the path to docker-compose is added
     }
 
     stages {
         stage('Debug Environment') {
             steps {
                 echo 'Debugging Jenkins Agent Environment...'
-                sh 'whoami'
-                sh 'docker --version || echo Docker not installed'
-                sh 'docker-compose --version || echo Docker Compose not installed'
-                sh 'git --version || echo Git not installed'
+                bat 'whoami'
+                bat 'docker --version || echo Docker not installed'
+                bat 'docker-compose --version || echo Docker Compose not installed'
+                bat 'git --version || echo Git not installed'
             }
         }
 
@@ -24,11 +23,18 @@ pipeline {
             }
         }
 
+        stage('Run Docker Compose Version Check') {
+            steps {
+                echo 'Checking Docker Compose version...'
+                bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker-compose.exe" --version'
+            }
+        }
+
         stage('Start Selenium Grid') {
             steps {
                 echo 'Starting Selenium Grid with Docker Compose...'
-                dir('docker') {  // Ensure that 'docker' directory is where docker-compose.yml is located
-                    sh "docker-compose up -d"
+                dir('docker') {  // Ensure this directory contains docker-compose.yml
+                    bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker-compose.exe" up -d'
                 }
             }
         }
@@ -36,14 +42,14 @@ pipeline {
         stage('Run Tests') {
             steps {
                 echo 'Running Selenium tests with Maven...'
-                sh 'mvn clean test -Dselenium.grid.url=${GRID_URL}'
+                bat 'mvn clean test -Dselenium.grid.url=${GRID_URL}'
             }
         }
 
         stage('Generate Reports') {
             steps {
                 echo 'Generating test reports...'
-                sh 'mvn surefire-report:report-only'
+                bat 'mvn surefire-report:report-only'
             }
         }
     }
@@ -51,8 +57,8 @@ pipeline {
     post {
         always {
             echo 'Cleaning up Docker containers...'
-            dir('docker') {  // Ensure cleanup is done in the correct directory
-                sh 'docker-compose down || true'
+            dir('docker') {  // Ensure this directory contains docker-compose.yml
+                bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker-compose.exe" down || echo Cleanup failed, ignoring'
             }
         }
     }

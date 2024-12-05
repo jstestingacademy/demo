@@ -2,12 +2,12 @@
 <testng-results ignored="0" total="1" passed="0" failed="1" skipped="0">
   <reporter-output>
   </reporter-output>
-  <suite started-at="2024-12-03T14:40:56 IST" name="Default suite" finished-at="2024-12-03T14:40:56 IST" duration-ms="825">
+  <suite started-at="2024-12-04T19:53:59 IST" name="Default suite" finished-at="2024-12-04T19:54:00 IST" duration-ms="828">
     <groups>
     </groups>
-    <test started-at="2024-12-03T14:40:56 IST" name="Default test" finished-at="2024-12-03T14:40:56 IST" duration-ms="825">
+    <test started-at="2024-12-04T19:53:59 IST" name="Default test" finished-at="2024-12-04T19:54:00 IST" duration-ms="828">
       <class name="demo.testcase">
-        <test-method signature="launch()[pri:0, instance:demo.testcase@8519cb4]" started-at="2024-12-03T14:40:56 IST" name="launch" finished-at="2024-12-03T14:40:56 IST" duration-ms="785" status="FAIL">
+        <test-method signature="launch()[pri:0, instance:demo.testcase@8519cb4]" started-at="2024-12-04T19:53:59 IST" name="launch" finished-at="2024-12-04T19:54:00 IST" duration-ms="788" status="FAIL">
           <exception class="org.openqa.selenium.SessionNotCreatedException">
             <message>
               <![CDATA[Could not start a new session. Possible causes are invalid address of the remote server or browser start-up failure. 
